@@ -31,23 +31,23 @@
 #endif
 
 /**
-*  Represents a frame in an APNG file. 
-*  It contains a whole IDAT chunk data for a PNG image.
-*/
-class Frame {
+ *  Represents a frame in an APNG file.
+ *  It contains a whole IDAT chunk data for a PNG image.
+ */
+open class Frame {
     
     static var allocCount = 0
     static var deallocCount = 0
     
-    private var width: Int = 0
-    private var height: Int = 0
-    private var bits: Int = 0
-    private var scale: CGFloat = 1.0
-    private var blend = false
+    public var width: Int = 0
+    public var height: Int = 0
+    public var bits: Int = 0
+    public var scale: CGFloat = 1.0
+    public var blend = false
     
-    private var cleaned = false
+    public var cleaned = false
     
-    var image: CocoaImage? {
+    public var image: UIImage? {
         let unusedCallback: CGDataProviderReleaseDataCallback = { optionalPointer, pointer, valueInt in }
         guard let provider = CGDataProvider(dataInfo: nil, data: bytes, size: length, releaseData: unusedCallback) else {
             return nil
@@ -57,11 +57,7 @@ class Frame {
                                   bitmapInfo: [CGBitmapInfo.byteOrder32Big, CGBitmapInfo(rawValue: CGImageAlphaInfo.last.rawValue)],
                                   provider: provider, decode: nil, shouldInterpolate: false, intent: .defaultIntent)
         {
-            #if os(macOS)
-                return NSImage(cgImage: imageRef, size: NSSize(width: width, height: height))
-            #else
-                return UIImage(cgImage: imageRef, scale: scale, orientation: .up)
-            #endif
+            return UIImage(cgImage: imageRef, scale: scale, orientation: .up)
         }
         return nil
     }
@@ -113,13 +109,13 @@ class Frame {
 }
 
 extension Frame: CustomStringConvertible {
-    var description: String {
+    public var description: String {
         return "<Frame: \(self.bytes)))> duration: \(self.duration), length: \(length)"
     }
 }
 
 extension Frame: CustomDebugStringConvertible {
-
+    
     var data: Data? {
         if let image = image {
             #if os(iOS) || os(watchOS) || os(tvOS)
@@ -131,7 +127,7 @@ extension Frame: CustomDebugStringConvertible {
         return nil
     }
     
-    var debugDescription: String {
+    public var debugDescription: String {
         return "\(description)\ndata: \(String(describing: data))"
     }
 }

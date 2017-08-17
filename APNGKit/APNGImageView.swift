@@ -33,19 +33,19 @@
     public typealias APNGView = UIView
     typealias CocoaImage = UIImage
 #endif
-    
+
 @objc public protocol APNGImageViewDelegate {
     @objc optional func apngImageView(_ imageView: APNGImageView, didFinishPlaybackForRepeatedCount count: Int)
 }
 
 /// An APNG image view object provides a view-based container for displaying an APNG image.
 /// You can control the starting and stopping of the animation, as well as the repeat count.
-/// All images associated with an APNGImageView object should use the same scale. 
+/// All images associated with an APNGImageView object should use the same scale.
 /// If your application uses images with different scales, they may render incorrectly.
 open class APNGImageView: APNGView {
     
     /// The image displayed in the image view.
-    /// If you change the image when the animation playing, 
+    /// If you change the image when the animation playing,
     /// the animation of original image will stop, and the new one will start automatically.
     open var image: APNGImage? { // Setter should be run on main thread
         didSet {
@@ -58,7 +58,7 @@ open class APNGImageView: APNGView {
             }
             
             image.reset()
-
+            
             let frame = image.next(currentIndex: currentFrameIndex)
             currentFrameDuration = frame.duration
             updateContents(frame.image)
@@ -76,7 +76,7 @@ open class APNGImageView: APNGView {
     /// A Bool value indicating whether the animation is running.
     open fileprivate(set) var isAnimating: Bool
     
-    /// A Bool value indicating whether the animation should be 
+    /// A Bool value indicating whether the animation should be
     /// started automatically after an image is set. Default is false.
     open var autoStartAnimation: Bool {
         didSet {
@@ -104,17 +104,17 @@ open class APNGImageView: APNGView {
     var repeated: Int = 0
     
     /**
-    Initialize an APNG image view with the specified image.
-    
-    - note: This method adjusts the frame of the receiver to match the 
-            size of the specified image. It also disables user interactions 
-            for the image view by default.
-            The first frame of image (default image) will be displayed.
-    
-    - parameter image: The initial APNG image to display in the image view.
-    
-    - returns: An initialized image view object.
-    */
+     Initialize an APNG image view with the specified image.
+     
+     - note: This method adjusts the frame of the receiver to match the
+     size of the specified image. It also disables user interactions
+     for the image view by default.
+     The first frame of image (default image) will be displayed.
+     
+     - parameter image: The initial APNG image to display in the image view.
+     
+     - returns: An initialized image view object.
+     */
     public init(image: APNGImage?) {
         self.image = image
         isAnimating = false
@@ -147,16 +147,16 @@ open class APNGImageView: APNGView {
             wantsLayer = false
         #endif
     }
-
+    
     /**
-    Initialize an APNG image view with a decoder.
-    
-    - note: You should never call this init method from your code.
-    
-    - parameter aDecoder: A decoder used to decode the view from nib.
-    
-    - returns: An initialized image view object.
-    */
+     Initialize an APNG image view with a decoder.
+     
+     - note: You should never call this init method from your code.
+     
+     - parameter aDecoder: A decoder used to decode the view from nib.
+     
+     - returns: An initialized image view object.
+     */
     required public init?(coder aDecoder: NSCoder) {
         isAnimating = false
         autoStartAnimation = false
@@ -164,8 +164,8 @@ open class APNGImageView: APNGView {
     }
     
     /**
-    Starts animation contained in the image.
-    */
+     Starts animation contained in the image.
+     */
     open func startAnimating() {
         let mainRunLoop = RunLoop.main
         let currentRunLoop = RunLoop.current
@@ -188,8 +188,8 @@ open class APNGImageView: APNGView {
     }
     
     /**
-    Starts animation contained in the image.
-    */
+     Starts animation contained in the image.
+     */
     open func stopAnimating() {
         let mainRunLoop = RunLoop.main
         let currentRunLoop = RunLoop.current
@@ -212,7 +212,7 @@ open class APNGImageView: APNGView {
         timer = nil
     }
     
-    func tick() {
+    open func tick() {
         guard let image = image else {
             return
         }

@@ -31,9 +31,9 @@
 #endif
 
 /**
-*  Reader for binary data.
-*  Put input data into an input stream and read it on requested.
-*/
+ *  Reader for binary data.
+ *  Put input data into an input stream and read it on requested.
+ */
 struct Reader {
     
     fileprivate var stream: InputStream
@@ -41,7 +41,7 @@ struct Reader {
     fileprivate var dataLength: Int {
         return data.count
     }
-
+    
     fileprivate let data: Data
     
     /// Built-in buffers. It will not be initiated until used.
@@ -75,13 +75,13 @@ struct Reader {
     }
     
     /**
-    Read some data into the input buffer.
-    
-    - parameter buffer:     Buffer to hold the data.
-    - parameter bytesCount: The count of bytes should be read.
-    
-    - returns: The count of bytes read.
-    */
+     Read some data into the input buffer.
+     
+     - parameter buffer:     Buffer to hold the data.
+     - parameter bytesCount: The count of bytes should be read.
+     
+     - returns: The count of bytes read.
+     */
     mutating func read(_ buffer: UnsafeMutablePointer<UInt8>, bytesCount: Int) -> Int {
         if stream.streamStatus == Stream.Status.atEnd {
             return 0
@@ -89,9 +89,9 @@ struct Reader {
         
         if stream.streamStatus != Stream.Status.open {
             fatalError("The stream is not in Open status. This may occur when you try " +
-                       "to read before calling beginReading() or after endReading(). " +
-                       "It could also be caused by you are trying to read from multiple threads. " +
-                       "Reader is not support multithreads reading! Current status is: \(stream.streamStatus.rawValue)")
+                "to read before calling beginReading() or after endReading(). " +
+                "It could also be caused by you are trying to read from multiple threads. " +
+                "Reader is not support multithreads reading! Current status is: \(stream.streamStatus.rawValue)")
         }
         
         if bytesCount == 0 {
@@ -110,12 +110,12 @@ struct Reader {
     }
     
     /**
-    Use built-in buffer to read data.
-    
-    - parameter bytesCount: The count of bytes should be read.
-    
-    - returns: Raw data and the count of bytes read.
-    */
+     Use built-in buffer to read data.
+     
+     - parameter bytesCount: The count of bytes should be read.
+     
+     - returns: Raw data and the count of bytes read.
+     */
     mutating func read(_ bytesCount: Int) -> (data: [UInt8], bytesCount: Int) {
         
         if stream.streamStatus == Stream.Status.atEnd {
@@ -124,14 +124,14 @@ struct Reader {
         
         if stream.streamStatus != Stream.Status.open {
             fatalError("The stream is not in Open status. This may occur when you try to read before " +
-                       "calling beginReading() or after endReading(). It could also be caused by you are " +
-                       "trying to read from multiple threads. Reader is not support multithreads reading! " +
-                       "Current status is: \(stream.streamStatus.rawValue)")
+                "calling beginReading() or after endReading(). It could also be caused by you are " +
+                "trying to read from multiple threads. Reader is not support multithreads reading! " +
+                "Current status is: \(stream.streamStatus.rawValue)")
         }
         
         if bytesCount > maxBufferCount {
             fatalError("Can not read byte count: \(bytesCount) since it beyonds the maxBufferCount of " +
-                       "the reader, which is \(maxBufferCount). Please try to use a larger buffer.")
+                "the reader, which is \(maxBufferCount). Please try to use a larger buffer.")
         }
         
         if bytesCount == 0 {

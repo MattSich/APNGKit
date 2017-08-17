@@ -33,7 +33,7 @@
 /// APNG animation should repeat forever.
 public let RepeatForever = -1
 
-/// Represents a decoded APNG image. 
+/// Represents a decoded APNG image.
 /// You can use instance of this class to get image information or display it on screen with `APNGImageView`.
 /// `APNGImage` can hold an APNG image or a regular PNG image. If latter, there will be only one frame in the image.
 open class APNGImage: NSObject { // For ObjC compatibility
@@ -42,7 +42,7 @@ open class APNGImage: NSObject { // For ObjC compatibility
     open var duration: TimeInterval? {
         return frames?.reduce(0.0) {
             $0 + $1.duration
-        } ?? nil
+            } ?? nil
     }
     
     /// Size of the image in point. The scale factor is considered.
@@ -80,7 +80,7 @@ open class APNGImage: NSObject { // For ObjC compatibility
     // The index is only for fully loaded images.
     // Progressive loading will just ignore that.
     func next(currentIndex: Int) -> Frame {
-
+        
         if let frames = frames {
             precondition(currentIndex < frames.count, "Trying to access index out of bound.")
             return frames[currentIndex]
@@ -106,7 +106,7 @@ open class APNGImage: NSObject { // For ObjC compatibility
     // So we could share the bytes in it between two "same" APNG image objects.
     fileprivate let dataOwner: APNGImage?
     fileprivate let internalSize: CGSize // size in pixel
-
+    
     init(scale: CGFloat, meta: APNGMeta) {
         let size = CGSize(width: Int(meta.width), height: Int(meta.height))
         self.internalSize = size
@@ -116,7 +116,7 @@ open class APNGImage: NSObject { // For ObjC compatibility
         self.firstFrameHidden = meta.firstFrameHidden
         
         let metaFrameCount = Int(meta.frameCount)
-        // Meta frameCount = 0 means we are falling back to normal PNG. 
+        // Meta frameCount = 0 means we are falling back to normal PNG.
         // The real frame count should be 1.
         self.frameCount = (metaFrameCount == 0) ? 1 : metaFrameCount
         dataOwner = nil
@@ -168,24 +168,24 @@ open class APNGImage: NSObject { // For ObjC compatibility
      same filename with a responding suffix (@2x or @3x) appended to it. For example, if the file’s name is button, it first searches for button@2x.
      If it finds a 2x, it loads that image and sets the scale property of the returned UIImage object to 2.0. Otherwise, it loads the unmodified filename
      and sets the scale property to 1.0.
-
+     
      - note: This method will cache the result image in APNGKit cache system to improve performance.
-             Images in Asset Category is not supported, you can only load files from the app's main bundle.
-    
+     Images in Asset Category is not supported, you can only load files from the app's main bundle.
+     
      - note: The image file should not be compressed by Xcode. By default, Xcode will compress PNG files in the app bundle by using a private pngcrush
-             version, which will opt-out all frames data except the first frame from the APNG image. You should change your APNG file extension to "apng"
-             (or anything besides "png") or just turn off the PNG compression in Xcode build settings to avoid this.
-    
+     version, which will opt-out all frames data except the first frame from the APNG image. You should change your APNG file extension to "apng"
+     (or anything besides "png") or just turn off the PNG compression in Xcode build settings to avoid this.
+     
      - parameter imageName:   The name of the file. If this is the first time the image is being loaded,
-                              the method looks for an image with the specified name in the application’s main bundle.
+     the method looks for an image with the specified name in the application’s main bundle.
      - parameter progressive: When set to true, only the current frame will be loaded. This could free up memory
-                              that are not current displayed, but will take more performance to load the needed frame
-                              when it is about to be displayed. Otherwise, all frames will be loaded once. Default is `false`.
+     that are not current displayed, but will take more performance to load the needed frame
+     when it is about to be displayed. Otherwise, all frames will be loaded once. Default is `false`.
      - parameter bundle:      The bundle in which APNGKit should search for the image name.
-
+     
      - returns: The image object for the specified file, or nil if the method could not find the specified image.
-    
-    */
+     
+     */
     public convenience init?(named imageName: String, progressive: Bool = false, in bundle: Bundle = .main) {
         if let path = imageName.apng_filePathByCheckingNameExistingInBundle(bundle) {
             self.init(contentsOfFile:path, saveToCache: true, progressive: progressive)
@@ -193,7 +193,7 @@ open class APNGImage: NSObject { // For ObjC compatibility
             return nil
         }
     }
-
+    
     /**
      Creates and returns an image object by loading the image data from the file at the specified path.
      
@@ -207,9 +207,9 @@ open class APNGImage: NSObject { // For ObjC compatibility
      
      - parameter path:        The path to the file.
      - parameter saveToCache: Should the result image saved to APNGKit memory caches. Default is false. Only works when `progressive` is `false`.
-     - parameter progressive: When set to true, only the current frame will be loaded. This could free up memory 
-                              that are not current displayed, but will take more performance to load the needed frame 
-                              when it is about to be displayed. Otherwise, all frames will be loaded once. Default is `false`.
+     - parameter progressive: When set to true, only the current frame will be loaded. This could free up memory
+     that are not current displayed, but will take more performance to load the needed frame
+     when it is about to be displayed. Otherwise, all frames will be loaded once. Default is `false`.
      
      - returns: A new image object for the specified file, or nil if the method could not initialize the image from the specified file.
      */
@@ -258,19 +258,19 @@ open class APNGImage: NSObject { // For ObjC compatibility
     
     /**
      Creates and returns an image object that uses the specified image data and scale factor.
-    
+     
      - note: This method does not cache the image object.
-
+     
      - parameter data:        The image data of APNG. This can be data from a file or data you get from network.
      - parameter scale:       The scale factor to use when interpreting the image data. Specifying a scale factor of 1.0 results in
-                              an image whose size matches the pixel-based dimensions of the image. Applying a different scale factor
-                              changes the size of the image as reported by the size property.
+     an image whose size matches the pixel-based dimensions of the image. Applying a different scale factor
+     changes the size of the image as reported by the size property.
      - parameter progressive: When set to true, only the current frame will be loaded. This could free up memory
-                              that are not current displayed, but will take more performance to load the needed frame
-                              when it is about to be displayed. Otherwise, all frames will be loaded once. Default is `false`.
-    
+     that are not current displayed, but will take more performance to load the needed frame
+     when it is about to be displayed. Otherwise, all frames will be loaded once. Default is `false`.
+     
      - returns: A new image object for the specified data, or nil if the method could not initialize the image from the specified data.
-    */
+     */
     public convenience init?(data: Data, scale: CGFloat, progressive: Bool = false) {
         let disassembler = Disassembler(data: data)
         
@@ -325,8 +325,8 @@ extension String {
         if fileName.hasSuffix("@2x") || fileName.hasSuffix("@3x") {
             var path: String?
             path = bundle.path(forResource: fileName, ofType: fileExtension) ??
-                   bundle.path(forResource: fileName, ofType: "apng") ??
-                   bundle.path(forResource: fileName, ofType: "png")
+                bundle.path(forResource: fileName, ofType: "apng") ??
+                bundle.path(forResource: fileName, ofType: "png")
             return path
         }
         
@@ -342,15 +342,15 @@ extension String {
         
         path = scales.reversed().reduce(nil) { (result, scale) -> String? in
             return result ??
-                   bundle.path(forResource: "\(fileName)@\(scale)x", ofType: fileExtension) ??
-                   bundle.path(forResource: "\(fileName)@\(scale)x", ofType: "apng") ??
-                   bundle.path(forResource: "\(fileName)@\(scale)x", ofType: "png")
+                bundle.path(forResource: "\(fileName)@\(scale)x", ofType: fileExtension) ??
+                bundle.path(forResource: "\(fileName)@\(scale)x", ofType: "apng") ??
+                bundle.path(forResource: "\(fileName)@\(scale)x", ofType: "png")
         }
         
         path = path ??
-               bundle.path(forResource: fileName, ofType: fileExtension) ?? // Matched scaled version not found, use the 1x version
-               bundle.path(forResource: fileName, ofType: "apng") ??
-               bundle.path(forResource: fileName, ofType: "png")
+            bundle.path(forResource: fileName, ofType: fileExtension) ?? // Matched scaled version not found, use the 1x version
+            bundle.path(forResource: fileName, ofType: "apng") ??
+            bundle.path(forResource: fileName, ofType: "png")
         
         return path
     }
