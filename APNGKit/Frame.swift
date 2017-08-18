@@ -93,7 +93,7 @@ open class Frame {
         memset(self.bytes, 0, self.length)
     }
     
-    func clean() {
+    public func clean() {
         cleaned = true
         bytes.deinitialize(count: length)
         bytes.deallocate(capacity: length)
